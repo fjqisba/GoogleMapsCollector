@@ -2,9 +2,10 @@ package DataBase
 
 import (
 	"GoogleMapsCollector/Utils/ProjectPath"
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"strings"
 )
 
 var(
@@ -12,13 +13,25 @@ var(
 )
 
 type LocationDB struct {
-	Sqlx *sql.DB
+	Sqlx *sqlx.DB
 }
+
+const stmt_createCountryTable = `create table country(
+		"country"		TEXT PRIMARY KEY NOT NULL,
+		"countryName"	TEXT NOT NULL
+);`
 
 func init()  {
 	var err error
-	GLocationDB.Sqlx,err = sql.Open("sqlite3",ProjectPath.GProjectBinPath +"\\db\\location.db")
+	GLocationDB.Sqlx,err = sqlx.Open("sqlite3",ProjectPath.GProjectBinPath +"\\db\\location.db")
 	if err != nil{
 		log.Panicln(err)
+	}
+
+	_,err = GLocationDB.Sqlx.Exec(stmt_createCountryTable)
+	if err != nil{
+		if strings.Contains(err.Error(),"already exists") == false{
+			log.Panicln(err)
+		}
 	}
 }

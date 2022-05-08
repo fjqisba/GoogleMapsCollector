@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="" />
+    <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase/ImportDB.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase/LocationDB.go" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/LocationDB.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,7 +54,7 @@
     <property name="last_opened_file_path" value="$USER_HOME$/GolandProjects/WPServer" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
-  <component name="RunManager" selected="Go Test.TestGenLocation in GoogleMapsCollector/TestUnit">
+  <component name="RunManager" selected="Go Build.go build GoogleMapsCollector">
     <configuration name="go build GoogleMapsCollector" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$" />
@@ -58,7 +65,7 @@
       <output_directory value="$PROJECT_DIR$/bin" />
       <method v="2" />
     </configuration>
-    <configuration name="TestGenLocation in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestImportDB in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$/TestUnit" />
       <root_directory value="$PROJECT_DIR$" />
@@ -68,17 +75,17 @@
       <filePath value="$PROJECT_DIR$" />
       <output_directory value="$PROJECT_DIR$/bin" />
       <framework value="gotest" />
-      <pattern value="^\QTestGenLocation\E$" />
+      <pattern value="^\QTestImportDB\E$" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Go Build.go build GoogleMapsCollector" />
-      <item itemvalue="Go Test.TestGenLocation in GoogleMapsCollector/TestUnit" />
+      <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestGenLocation in GoogleMapsCollector/TestUnit" />
         <item itemvalue="Go Build.go build GoogleMapsCollector" />
+        <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
       </list>
     </recent_temporary>
   </component>
@@ -96,9 +103,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/TestUnit/ImportDB_test.go</url>
+          <line>119</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/FyneApp/FyneApp.go</url>
-          <line>31</line>
-          <option name="timeStamp" value="5" />
+          <line>67</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
