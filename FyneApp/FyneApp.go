@@ -9,9 +9,15 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
+
+type CitySelectData struct {
+	CityName 	string
+	CitySwitch	binding.Bool
+}
 
 type FyneApp struct {
 	app fyne.App
@@ -19,10 +25,17 @@ type FyneApp struct {
 
 	select_Country *widget.Select
 	select_State *widget.Select
-	select_City *widget.Select
-
+	select_City *widget.List
+	button_SelectAllCity *widget.Button
+	button_StartTask *widget.Button
+	entry_KeyWord *widget.Entry
+	//国家列表,英文
 	countryList []string
+	//国家列表,中文
 	countryNameList []string
+	//城市列表
+	cityList binding.UntypedList
+
 }
 
 func NewFyneApp()*FyneApp  {
@@ -53,13 +66,15 @@ func (this *FyneApp)OnCountrySelected(country string)  {
 	this.select_State.Options = append(this.select_State.Options, stateList...)
 	this.select_State.Enable()
 	this.select_State.SetSelectedIndex(0)
+
+	this.cityList.Set([]interface{}{})
 }
 
 //省份被选择
 func (this *FyneApp)OnStateSelected(state string) {
 
 	if state == "全部省份"{
-		this.select_City.Disable()
+		this.cityList.Set([]interface{}{})
 		return
 	}
 
@@ -70,15 +85,44 @@ func (this *FyneApp)OnStateSelected(state string) {
 	if err != nil{
 		return
 	}
-	this.select_City.Enable()
-	this.select_City.Options = []string{"全部城市"}
-	this.select_City.Options = append(this.select_City.Options, cityList...)
-	this.select_City.SetSelectedIndex(0)
+
+	var cityBoundList []interface{}
+	for _,eCityName := range cityList{
+		cityBoundList = append(cityBoundList, &CitySelectData{
+			CityName:eCityName,
+			CitySwitch:binding.NewBool(),
+		})
+	}
+
+	this.cityList.Set(cityBoundList)
 }
 
 //城市被选择
 func (this *FyneApp)OnCitySelected(city string) {
 
+}
+
+//选择所有的城市
+func (this *FyneApp)OnSelectAllCity()  {
+
+	if this.button_SelectAllCity.Text == "全选"{
+		this.button_SelectAllCity.Text = "清空"
+		vec_AllCity, _  := this.cityList.Get()
+		for _,eCityList := range vec_AllCity{
+			bTrue := binding.NewBool()
+			bTrue.Set(true)
+			eCityList.(*CitySelectData).CitySwitch = bTrue
+		}
+	}else{
+		this.button_SelectAllCity.Text = "全选"
+		vec_AllCity, _  := this.cityList.Get()
+		for _,eCityList := range vec_AllCity{
+			eCityList.(*CitySelectData).CitySwitch = binding.NewBool()
+		}
+	}
+	this.button_SelectAllCity.Refresh()
+	this.select_City.Refresh()
+	return
 }
 
 func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
@@ -96,12 +140,10 @@ func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
 	}))
 
 	mainMenu := fyne.NewMainMenu(menu_Program,menu_about)
-
 	return mainMenu
 }
 
 func (this *FyneApp)InitializeComponent()error  {
-
 
 	//初始化窗口
 	this.mainWindow = this.app.NewWindow("谷歌地图采集器")
@@ -135,10 +177,8 @@ func (this *FyneApp)InitializeComponent()error  {
 	this.select_Country.Move(fyne.NewPos(110,30))
 	this.select_Country.Resize(fyne.NewSize(130,25))
 
-
-
 	customerLayout.Add(label_selectCountry)
-	customerLayout.Add(this.select_Country )
+	customerLayout.Add(this.select_Country)
 
 	//添加省份选择
 	label_selectState := widget.NewLabel("选择省份:")
@@ -154,18 +194,40 @@ func (this *FyneApp)InitializeComponent()error  {
 
 	//添加城市选择
 	label_selectCity := widget.NewLabel("选择城市:")
-	label_selectCity.Move(fyne.NewPos(20,105))
-	this.select_City = widget.NewSelect([]string{"全部城市"},this.OnCitySelected)
-	this.select_City.PlaceHolder = "请选择"
-	this.select_City.Move(fyne.NewPos(110,110))
-	this.select_City.Resize(fyne.NewSize(130,25))
-	this.select_City.Disable()
+	label_selectCity.Move(fyne.NewPos(270,25))
+	this.button_SelectAllCity = widget.NewButton("全选",this.OnSelectAllCity)
+	this.button_SelectAllCity.Move(fyne.NewPos(370,32))
+	this.button_SelectAllCity.Resize(fyne.NewSize(100,20))
 
+	this.cityList = binding.NewUntypedList()
+	this.select_City = widget.NewListWithData(this.cityList, func() fyne.CanvasObject {
+		return widget.NewCheck("", nil)
+	} , func(item binding.DataItem, object fyne.CanvasObject) {
+		untypeData, _ := item.(binding.Untyped).Get()
+		object.(*widget.Check).Bind(untypeData.(*CitySelectData).CitySwitch)
+		object.(*widget.Check).Text = untypeData.(*CitySelectData).CityName
+		object.(*widget.Check).Refresh()
+	})
+	this.select_City.Move(fyne.NewPos(350,70))
+	this.select_City.Resize(fyne.NewSize(400,300))
 	customerLayout.Add(label_selectCity)
 	customerLayout.Add(this.select_City)
+	customerLayout.Add(this.button_SelectAllCity)
 
+	//添加关键字搜索
+	label_keyword := widget.NewLabel("采集关键字(换行符分割多个):")
+	label_keyword.Move(fyne.NewPos(20,200))
+	this.entry_KeyWord = widget.NewMultiLineEntry()
+	this.entry_KeyWord.Move(fyne.NewPos(28,230))
+	this.entry_KeyWord.Resize(fyne.NewSize(200,120))
+	customerLayout.Add(this.entry_KeyWord)
+	customerLayout.Add(label_keyword)
 
-
+	//添加任务按钮
+	this.button_StartTask = widget.NewButton("开始任务", this.TaskHandlerEntry)
+	this.button_StartTask.Move(fyne.NewPos(270,430))
+	this.button_StartTask.Resize(fyne.NewSize(200,120))
+	customerLayout.Add(this.button_StartTask)
 
 	this.mainWindow.SetContent(customerLayout)
 
@@ -173,6 +235,9 @@ func (this *FyneApp)InitializeComponent()error  {
 }
 
 func (this *FyneApp)InitApp()error  {
+
+	//设置程序规模
+	//os.Setenv("FYNE_SCALE", "0.9")
 
 	t := &myTheme{}
 	t.SetFonts(ProjectPath.GProjectBinPath + "\\rsrc\\simsun.ttc","")
