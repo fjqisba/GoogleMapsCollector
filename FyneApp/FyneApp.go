@@ -3,6 +3,7 @@ package FyneApp
 import (
 	"GoogleMapsCollector/DataBase"
 	"GoogleMapsCollector/Model"
+	"GoogleMapsCollector/TaskManager"
 	"GoogleMapsCollector/Utils/ProjectPath"
 	"errors"
 	"fmt"
@@ -12,17 +13,18 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"sync/atomic"
 )
 
-type CitySelectData struct {
-	CityName 	string
-	CitySwitch	binding.Bool
-}
+
 
 type FyneApp struct {
 	app fyne.App
 	mainWindow fyne.Window
-
+	taskStatus atomic.Value
+	//任务调度器
+	taskManager *TaskManager.TaskManager
+	//界面信息
 	select_Country *widget.Select
 	select_State *widget.Select
 	select_City *widget.List
@@ -33,96 +35,15 @@ type FyneApp struct {
 	countryList []string
 	//国家列表,中文
 	countryNameList []string
-	//城市列表
+	//城市列表,[]*CitySelectData
 	cityList binding.UntypedList
-
 }
 
 func NewFyneApp()*FyneApp  {
 	return &FyneApp{
 		app:app.New(),
+		taskManager:TaskManager.NewTaskManager(),
 	}
-}
-
-//国家被选择
-func (this *FyneApp)OnCountrySelected(country string)  {
-
-	var selectCountry string
-	for index,eCountryName := range this.countryNameList{
-		if country == eCountryName{
-			selectCountry = this.countryList[index]
-			break
-		}
-	}
-
-	var stateList []string
-	stmt := fmt.Sprintf("SELECT distinct region FROM %s ",selectCountry)
-	err := DataBase.GLocationDB.Sqlx.Select(&stateList,stmt)
-	if err != nil{
-		return
-	}
-
-	this.select_State.Options = []string{"全部省份"}
-	this.select_State.Options = append(this.select_State.Options, stateList...)
-	this.select_State.Enable()
-	this.select_State.SetSelectedIndex(0)
-
-	this.cityList.Set([]interface{}{})
-}
-
-//省份被选择
-func (this *FyneApp)OnStateSelected(state string) {
-
-	if state == "全部省份"{
-		this.cityList.Set([]interface{}{})
-		return
-	}
-
-	selectCountry := this.countryList[this.select_Country.SelectedIndex()]
-	var cityList []string
-	stmt := fmt.Sprintf("SELECT distinct city FROM %s where region=?",selectCountry)
-	err := DataBase.GLocationDB.Sqlx.Select(&cityList,stmt,state)
-	if err != nil{
-		return
-	}
-
-	var cityBoundList []interface{}
-	for _,eCityName := range cityList{
-		cityBoundList = append(cityBoundList, &CitySelectData{
-			CityName:eCityName,
-			CitySwitch:binding.NewBool(),
-		})
-	}
-
-	this.cityList.Set(cityBoundList)
-}
-
-//城市被选择
-func (this *FyneApp)OnCitySelected(city string) {
-
-}
-
-//选择所有的城市
-func (this *FyneApp)OnSelectAllCity()  {
-
-	if this.button_SelectAllCity.Text == "全选"{
-		this.button_SelectAllCity.Text = "清空"
-		vec_AllCity, _  := this.cityList.Get()
-		for _,eCityList := range vec_AllCity{
-			bTrue := binding.NewBool()
-			bTrue.Set(true)
-			eCityList.(*CitySelectData).CitySwitch = bTrue
-		}
-	}else{
-		this.button_SelectAllCity.Text = "全选"
-		vec_AllCity, _  := this.cityList.Get()
-		for _,eCityList := range vec_AllCity{
-			eCityList.(*CitySelectData).CitySwitch = binding.NewBool()
-		}
-	}
-	this.button_SelectAllCity.Refresh()
-	this.select_City.Refresh()
-	return
 }
 
 func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
@@ -204,8 +125,8 @@ func (this *FyneApp)InitializeComponent()error  {
 		return widget.NewCheck("", nil)
 	} , func(item binding.DataItem, object fyne.CanvasObject) {
 		untypeData, _ := item.(binding.Untyped).Get()
-		object.(*widget.Check).Bind(untypeData.(*CitySelectData).CitySwitch)
-		object.(*widget.Check).Text = untypeData.(*CitySelectData).CityName
+		object.(*widget.Check).Bind(untypeData.(*Model.CitySelectData).CitySwitch)
+		object.(*widget.Check).Text = untypeData.(*Model.CitySelectData).CityName
 		object.(*widget.Check).Refresh()
 	})
 	this.select_City.Move(fyne.NewPos(350,70))
@@ -230,24 +151,100 @@ func (this *FyneApp)InitializeComponent()error  {
 	customerLayout.Add(this.button_StartTask)
 
 	this.mainWindow.SetContent(customerLayout)
-
 	return nil
 }
+
+//国家被选择
+func (this *FyneApp)OnCountrySelected(country string)  {
+
+	var selectCountry string
+	for index,eCountryName := range this.countryNameList{
+		if country == eCountryName{
+			selectCountry = this.countryList[index]
+			break
+		}
+	}
+
+	var stateList []string
+	stmt := fmt.Sprintf("SELECT distinct region FROM %s ",selectCountry)
+	err := DataBase.GLocationDB.Sqlx.Select(&stateList,stmt)
+	if err != nil{
+		return
+	}
+
+	this.select_State.Options = []string{"全部省份"}
+	this.select_State.Options = append(this.select_State.Options, stateList...)
+	this.select_State.Enable()
+	this.select_State.SetSelectedIndex(0)
+
+	this.cityList.Set([]interface{}{})
+}
+
+//省份被选择
+func (this *FyneApp)OnStateSelected(state string) {
+
+	if state == "全部省份"{
+		this.cityList.Set([]interface{}{})
+		return
+	}
+
+	selectCountry := this.countryList[this.select_Country.SelectedIndex()]
+	var cityList []string
+	stmt := fmt.Sprintf("SELECT distinct city FROM %s where region=?",selectCountry)
+	err := DataBase.GLocationDB.Sqlx.Select(&cityList,stmt,state)
+	if err != nil{
+		return
+	}
+
+	var cityBoundList []interface{}
+	for _,eCityName := range cityList{
+		cityBoundList = append(cityBoundList, &Model.CitySelectData{
+			CityName:eCityName,
+			CitySwitch:binding.NewBool(),
+		})
+	}
+
+	this.cityList.Set(cityBoundList)
+}
+
+//选择所有的城市
+func (this *FyneApp)OnSelectAllCity()  {
+
+	if this.button_SelectAllCity.Text == "全选"{
+		this.button_SelectAllCity.Text = "清空"
+		vec_AllCity, _  := this.cityList.Get()
+		for _,eCityList := range vec_AllCity{
+			bTrue := binding.NewBool()
+			bTrue.Set(true)
+			eCityList.(*Model.CitySelectData).CitySwitch = bTrue
+		}
+	}else{
+		this.button_SelectAllCity.Text = "全选"
+		vec_AllCity, _  := this.cityList.Get()
+		for _,eCityList := range vec_AllCity{
+			eCityList.(*Model.CitySelectData).CitySwitch = binding.NewBool()
+		}
+	}
+	this.button_SelectAllCity.Refresh()
+	this.select_City.Refresh()
+	return
+}
+
 
 func (this *FyneApp)InitApp()error  {
 
 	//设置程序规模
 	//os.Setenv("FYNE_SCALE", "0.9")
-
 	t := &myTheme{}
 	t.SetFonts(ProjectPath.GProjectBinPath + "\\rsrc\\simsun.ttc","")
 	this.app.Settings().SetTheme(t)
-
 	err := this.InitializeComponent()
 	if err != nil{
 		return err
 	}
 
+	this.taskManager.TaskFinish = this.onTaskFinished
+	this.taskStatus.Store(Model.TASK_START)
 	return nil
 }
 

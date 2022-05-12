@@ -7,8 +7,10 @@
     <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GoogleMapsScraper/GoogleMapsScraper.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ScrapTask.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/StringBoolList.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,10 +51,18 @@
     <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/GolandProjects/WPServer" />
+    <property name="last_opened_file_path" value="$USER_HOME$/GolandProjects/AnyTest" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RunManager" selected="Go Build.go build GoogleMapsCollector">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build GoogleMapsCollector" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$" />
@@ -74,6 +84,15 @@
       <output_directory value="$PROJECT_DIR$/bin" />
       <framework value="gotest" />
       <pattern value="^\QTestImportDB\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
       <method v="2" />
     </configuration>
     <list>
@@ -104,11 +123,6 @@
           <url>file://$PROJECT_DIR$/TestUnit/ImportDB_test.go</url>
           <line>119</line>
           <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/FyneApp/StartTask.go</url>
-          <line>32</line>
-          <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
