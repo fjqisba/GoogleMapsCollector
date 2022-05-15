@@ -4,6 +4,7 @@ import (
 	"GoogleMapsCollector/DataBase"
 	"GoogleMapsCollector/Model"
 	"GoogleMapsCollector/TaskManager"
+	"GoogleMapsCollector/TaskManager/TaskSignal"
 	"GoogleMapsCollector/Utils/ProjectPath"
 	"errors"
 	"fmt"
@@ -13,7 +14,6 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
-	"sync/atomic"
 )
 
 
@@ -21,9 +21,6 @@ import (
 type FyneApp struct {
 	app fyne.App
 	mainWindow fyne.Window
-	taskStatus atomic.Value
-	//任务调度器
-	taskManager *TaskManager.TaskManager
 	//界面信息
 	select_Country *widget.Select
 	select_State *widget.Select
@@ -42,7 +39,6 @@ type FyneApp struct {
 func NewFyneApp()*FyneApp  {
 	return &FyneApp{
 		app:app.New(),
-		taskManager:TaskManager.NewTaskManager(),
 	}
 }
 
@@ -53,7 +49,12 @@ func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
 	})
 	quitAction.IsQuit = true
 
-	menu_Program:= fyne.NewMenu("程序", quitAction)
+	setAction := fyne.NewMenuItem("设置", func() {
+		setWnd := NewSettingWindow(this.mainWindow)
+		setWnd.Show()
+	})
+
+	menu_Program:= fyne.NewMenu("程序",setAction, quitAction)
 	menu_about:= fyne.NewMenu("关于", fyne.NewMenuItem("关于采集器", func() {
 		info := dialog.NewInformation("关于谷歌地图采集器","企业内部定制版,禁止外部分享",this.mainWindow)
 		info.SetDismissText("好的")
@@ -64,6 +65,27 @@ func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
 	return mainMenu
 }
 
+
+func (this *FyneApp)onConfirmClose(bConfirm bool) {
+	if bConfirm == true{
+		this.mainWindow.Close()
+	}
+}
+
+func (this *FyneApp)onCloseWindow()  {
+
+	if TaskSignal.GetTaskStatus() == Model.TASK_START{
+		this.mainWindow.Close()
+		return
+	}
+
+	//需要等待任务结束
+	errHnd := dialog.NewConfirm("提示","请先停止正在运行中的任务!",this.onConfirmClose,this.mainWindow)
+	errHnd.SetConfirmText("强制退出")
+	errHnd.SetDismissText("取消")
+	errHnd.Show()
+}
+
 func (this *FyneApp)InitializeComponent()error  {
 
 	//初始化窗口
@@ -72,6 +94,7 @@ func (this *FyneApp)InitializeComponent()error  {
 	this.mainWindow.CenterOnScreen()
 	this.mainWindow.SetMaster()
 
+	this.mainWindow.SetCloseIntercept(this.onCloseWindow)
 	//设置主菜单
 	this.mainWindow.SetMainMenu(this.makeMainMenu())
 
@@ -129,6 +152,9 @@ func (this *FyneApp)InitializeComponent()error  {
 		object.(*widget.Check).Text = untypeData.(*Model.CitySelectData).CityName
 		object.(*widget.Check).Refresh()
 	})
+	if this.select_City == nil{
+		return errors.New("no cityList")
+	}
 	this.select_City.Move(fyne.NewPos(350,70))
 	this.select_City.Resize(fyne.NewSize(400,300))
 	customerLayout.Add(label_selectCity)
@@ -243,8 +269,8 @@ func (this *FyneApp)InitApp()error  {
 		return err
 	}
 
-	this.taskManager.TaskFinish = this.onTaskFinished
-	this.taskStatus.Store(Model.TASK_START)
+	TaskManager.GTaskManager.TaskFinishCB = this.onTaskFinished
+	TaskSignal.SetTaskStatus(Model.TASK_START)
 	return nil
 }
 

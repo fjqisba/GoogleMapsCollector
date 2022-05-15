@@ -5,7 +5,8 @@
 *.so
 *.dylib
 db/
-
+chrome/
+logs/
 # Test binary, built with `go test -c`
 *.test
 

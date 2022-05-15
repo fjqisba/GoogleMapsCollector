@@ -1,21 +1,12 @@
 package Utils
 
-import (
-	"log"
-	"os"
-	"path/filepath"
-)
+import "os"
 
-var(
-	//项目运行路径
-	GProjectBinPath string
-)
-
-func init()  {
-	var err error
-	GProjectBinPath = filepath.Dir(os.Args[0])
-	GProjectBinPath, err = filepath.Abs(GProjectBinPath)
-	if err != nil {
-		log.Fatalln(err)
+func IsPathExists(path string)bool  {
+	_,err := os.Stat(path)
+	if err == nil{
+		return true
 	}
+	return false
 }
+

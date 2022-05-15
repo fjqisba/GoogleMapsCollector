@@ -3,7 +3,8 @@ package FyneApp
 import (
 	"GoogleMapsCollector/DataBase"
 	"GoogleMapsCollector/Model"
-	"context"
+	"GoogleMapsCollector/TaskManager"
+	"GoogleMapsCollector/TaskManager/TaskSignal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -87,10 +88,8 @@ func (this *FyneApp)StartTask(vec_KeyWords []string)error  {
 	}
 
 	log.Println("生成任务完成,总数:",len(CollectTaskList))
-	this.taskManager.TaskList = CollectTaskList
-	this.taskManager.Ctx,this.taskManager.CancelFunc = context.WithCancel(context.Background())
-
-	go this.taskManager.Thread_ExecuteTask()
+	TaskManager.GTaskManager.TaskList = CollectTaskList
+	go TaskManager.GTaskManager.Thread_ExecuteTask()
 	return nil
 }
 
@@ -100,7 +99,7 @@ func (this *FyneApp)onTaskFinished()  {
 	this.button_StartTask.Text = "开始任务"
 	this.button_StartTask.Enable()
 	this.button_StartTask.Refresh()
-	this.taskStatus.Store(Model.TASK_START)
+	TaskSignal.SetTaskStatus(Model.TASK_START)
 }
 
 func (this *FyneApp)StopTask()  {
@@ -110,7 +109,7 @@ func (this *FyneApp)StopTask()  {
 	this.button_StartTask.Disable()
 
 	//传递停止信号
-	this.taskManager.CancelFunc()
+	TaskSignal.SetTaskStatus(Model.TASK_STOP)
 }
 
 //检查任务执行参数,返回false表示检查失败
@@ -143,7 +142,8 @@ func (this *FyneApp)preCheckTaskParam()([]string,bool)  {
 
 func (this *FyneApp)TaskHandlerEntry() {
 
-	currentState := this.taskStatus.Load().(Model.TaskState)
+	currentState := TaskSignal.GetTaskStatus()
+
 
 	//开始任务
 	if currentState == Model.TASK_START{
@@ -152,13 +152,13 @@ func (this *FyneApp)TaskHandlerEntry() {
 		if bCheckResult == false{
 			return
 		}
-		this.taskStatus.Store(Model.TASK_EXECUTE)
+		TaskSignal.SetTaskStatus(Model.TASK_EXECUTE)
 		this.StartTask(keyWordList)
 	}
 
 	//结束任务
 	if currentState == Model.TASK_EXECUTE {
-		this.taskStatus.Store(Model.TASK_STOP)
+		TaskSignal.SetTaskStatus(Model.TASK_STOP)
 		go this.StopTask()
 	}
 }
