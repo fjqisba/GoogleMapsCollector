@@ -1,9 +1,14 @@
 package GooglePageScraper
 
 import (
+	"GoogleMapsCollector/ConfigManager"
 	"GoogleMapsCollector/Model"
+	"GoogleMapsCollector/Module/CsvResult"
+	"GoogleMapsCollector/Module/EmailMiner"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -40,22 +45,32 @@ var(
 	regex_Phone *regexp.Regexp
 )
 
-func getGooglePageHtml(url string)string  {
+func getGooglePageHtml(pageUrl string)string  {
+
+	proxyFunc := http.ProxyFromEnvironment
+	proxyUrl := ConfigManager.Instance.GetSystemProxy()
+	if proxyUrl != ""{
+		proxyFunc = func(req *http.Request) (*url.URL, error){
+			return url.Parse("http://" + proxyUrl)
+		}
+	}
 
 	xClient := http.Client{
 		Transport: &http.Transport{
 			DisableKeepAlives:true,
+			Proxy: proxyFunc,
 		},
-		Timeout: 15 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 
-	hReq,err := http.NewRequest("GET",url,nil)
+	hReq,err := http.NewRequest("GET",pageUrl,nil)
 	if err != nil{
 		return ""
 	}
 	hReq.Header.Set("User-Agent","Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 96.0.4664.45 Safari / 537.36")
 	resp,err := xClient.Do(hReq)
 	if err != nil{
+		log.Println("访问链接出错",pageUrl,":",err)
 		return ""
 	}
 	defer resp.Body.Close()
@@ -100,11 +115,14 @@ func parseAddress(scrapeData *Model.ScraperData)  {
 
 }
 
-func GetData(task* Model.CollectionTask,Url string)  {
+func GetData(task* Model.CollectionTask,pageUrl string)  {
 	var tmpScraperData Model.ScraperData
-
+	log.Println("开始采集地址:",pageUrl)
+	tmpScraperData.Category = task.Category
 	tmpScraperData.State = task.State
-	html := getGooglePageHtml(Url)
+	tmpScraperData.GoogleUrl = pageUrl
+
+	html := getGooglePageHtml(pageUrl)
 	if html == ""{
 		return
 	}
@@ -164,8 +182,13 @@ func GetData(task* Model.CollectionTask,Url string)  {
 		tmpScraperData.Phone = tmpMatchList[1]
 	}
 
+	if tmpScraperData.Website != ""{
+		tmpScraperData.Email = EmailMiner.GetEmail(tmpScraperData.Website)
+	}
 
-	//To do...爬取邮箱
+	//写出结果
+	log.Println("采集结束,写入数据:",pageUrl)
+	CsvResult.Instance.WriteResult(&tmpScraperData)
 }
 
 func init()  {

@@ -2,6 +2,9 @@ package Model
 
 type ScraperData struct {
 
+	//关键字
+	Category string
+
 	State string
 
 	//类型
@@ -26,4 +29,10 @@ type ScraperData struct {
 
 	//电话
 	Phone string
+
+	//邮箱
+	Email string
+
+	//谷歌地图链接
+	GoogleUrl string
 }

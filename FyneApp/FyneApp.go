@@ -53,7 +53,6 @@ func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
 		setWnd := NewSettingWindow(this.mainWindow)
 		setWnd.Show()
 	})
-
 	menu_Program:= fyne.NewMenu("程序",setAction, quitAction)
 	menu_about:= fyne.NewMenu("关于", fyne.NewMenuItem("关于采集器", func() {
 		info := dialog.NewInformation("关于谷歌地图采集器","企业内部定制版,禁止外部分享",this.mainWindow)

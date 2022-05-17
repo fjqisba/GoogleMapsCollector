@@ -10,18 +10,29 @@ import (
 )
 
 var(
-	GConfigManager ConfigManager
+	Instance ConfigManager
 )
 
-type MainConfig struct {
+type mainConfig struct {
 	//每个邮编提取多少邮件
 	EmailPerZipCode int
+	//系统代理
+	SystemProxy string
 }
 
 type ConfigManager struct {
 	ini *ini.File
 	FilePath string
-	MainConfig MainConfig
+	mainConfig mainConfig
+}
+
+
+func (this *ConfigManager)GetSystemProxy()string  {
+	return this.ini.Section("main").Key("SystemProxy").Value()
+}
+
+func (this *ConfigManager)SetSystemProxy(proxy string)  {
+	this.ini.Section("main").Key("SystemProxy").SetValue(proxy)
 }
 
 func (this *ConfigManager)GetEmailPerZipCode()string  {
@@ -51,7 +62,7 @@ func (this *ConfigManager)initConfigManager(settingPath string)error  {
 		return err
 	}
 	this.FilePath = settingPath
-	this.MainConfig.EmailPerZipCode, _ = strconv.Atoi(this.GetEmailPerZipCode())
+	this.mainConfig.EmailPerZipCode, _ = strconv.Atoi(this.GetEmailPerZipCode())
 	return nil
 }
 
@@ -63,7 +74,7 @@ func init()  {
 			hFile.Close()
 		}
 	}
-	err := GConfigManager.initConfigManager(settingPath)
+	err := Instance.initConfigManager(settingPath)
 	if err != nil{
 		log.Panicln(err)
 	}

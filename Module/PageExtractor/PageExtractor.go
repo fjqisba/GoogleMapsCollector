@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -65,7 +66,9 @@ func ExtractPage(url string)(ret []string)  {
 			tmpMap[eResult[1]] = struct{}{}
 		}
 	}
-	if len(ret) >= ConfigManager.GConfigManager.MainConfig.EmailPerZipCode{
+
+	zipCodeCount, _ := strconv.Atoi(ConfigManager.Instance.GetEmailPerZipCode())
+	if len(ret) >= zipCodeCount{
 		return ret
 	}
 	//继续补充节点

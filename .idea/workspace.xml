@@ -6,13 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ConfigManager/ConfigManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/ConfigManager/ConfigManager.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CollectionTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CollectionTask.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FyneApp/SettingWindow.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/SettingWindow.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ScraperData.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ScraperData.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager/TaskManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/TaskManager.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Utils/Utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/setting.ini" beforeDir="false" afterPath="$PROJECT_DIR$/bin/setting.ini" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
