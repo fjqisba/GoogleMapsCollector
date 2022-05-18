@@ -6,15 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConfigManager/ConfigManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/ConfigManager/ConfigManager.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FyneApp/SettingWindow.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/SettingWindow.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ScraperData.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ScraperData.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaskManager/TaskManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/TaskManager.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/setting.ini" beforeDir="false" afterPath="$PROJECT_DIR$/bin/setting.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Location.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Location.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +70,19 @@
       <output_directory value="$PROJECT_DIR$/bin" />
       <method v="2" />
     </configuration>
+    <configuration name="TestFixDB in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$/TestUnit" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="GoogleMapsCollector/TestUnit" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <output_directory value="$PROJECT_DIR$/bin" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFixDB\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestImportDB in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$/TestUnit" />
@@ -91,11 +99,13 @@
     <list>
       <item itemvalue="Go Build.go build GoogleMapsCollector" />
       <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
+      <item itemvalue="Go Test.TestFixDB in GoogleMapsCollector/TestUnit" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build GoogleMapsCollector" />
         <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
+        <item itemvalue="Go Test.TestFixDB in GoogleMapsCollector/TestUnit" />
       </list>
     </recent_temporary>
   </component>
@@ -113,9 +123,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/TestUnit/ImportDB_test.go</url>
-          <line>119</line>
-          <option name="timeStamp" value="22" />
+          <url>file://$PROJECT_DIR$/Model/CollectionTask.go</url>
+          <line>39</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -32,6 +32,8 @@ type FyneApp struct {
 	countryList []string
 	//国家列表,中文
 	countryNameList []string
+	//查表专用
+	countryTableList []string
 	//城市列表,[]*CitySelectData
 	cityList binding.UntypedList
 }
@@ -102,7 +104,7 @@ func (this *FyneApp)InitializeComponent()error  {
 
 	var tmpCountryMapping []Model.CountryNameMapping
 	//添加国家选择
-	err := DataBase.GLocationDB.Sqlx.Select(&tmpCountryMapping,"SELECT country,countryName from country")
+	err := DataBase.GLocationDB.Sqlx.Select(&tmpCountryMapping,"SELECT country,countryName,tableName from country order by country")
 	if err != nil{
 		return err
 	}
@@ -112,6 +114,7 @@ func (this *FyneApp)InitializeComponent()error  {
 	for _,eCountryMapping := range tmpCountryMapping{
 		this.countryList = append(this.countryList, eCountryMapping.Country)
 		this.countryNameList = append(this.countryNameList, eCountryMapping.CountryName)
+		this.countryTableList = append(this.countryTableList , eCountryMapping.TableName)
 	}
 	label_selectCountry := widget.NewLabel("选择国家:")
 	this.select_Country = widget.NewSelect(this.countryNameList, this.OnCountrySelected)
@@ -185,7 +188,7 @@ func (this *FyneApp)OnCountrySelected(country string)  {
 	var selectCountry string
 	for index,eCountryName := range this.countryNameList{
 		if country == eCountryName{
-			selectCountry = this.countryList[index]
+			selectCountry = this.countryTableList[index]
 			break
 		}
 	}
@@ -213,7 +216,7 @@ func (this *FyneApp)OnStateSelected(state string) {
 		return
 	}
 
-	selectCountry := this.countryList[this.select_Country.SelectedIndex()]
+	selectCountry := this.countryTableList[this.select_Country.SelectedIndex()]
 	var cityList []string
 	stmt := fmt.Sprintf("SELECT distinct city FROM %s where region=?",selectCountry)
 	err := DataBase.GLocationDB.Sqlx.Select(&cityList,stmt,state)

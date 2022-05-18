@@ -24,13 +24,13 @@ PRIMARY KEY(region,city));`
 
 
 
-
 func TestImportDB(t *testing.T) {
 
+	//填充以下三个字段
+	countryName := "UK"
+	countryZHName := "英国"
+	countryID := "700"
 
-	countryName := "Italy"
-	countryZHName := "意大利"
-	countryID := "100"
 	hRegion,err := os.Open("D:\\工作台\\国外软件\\db\\region.csv")
 	if err != nil{
 		log.Panicln(err)
@@ -44,7 +44,7 @@ func TestImportDB(t *testing.T) {
 		}
 	}
 
-	_,err = DataBase.GLocationDB.Sqlx.Exec("INSERT INTO country(country,countryName) VALUES(?,?)",countryName,countryZHName)
+	_,err = DataBase.GLocationDB.Sqlx.Exec("INSERT INTO country(country,countryName,tableName) VALUES(?,?,?)",countryName,countryZHName,countryName)
 
 	//key是CityId,value是ZipCode
 	zipCodeMap := make(map[string][]string)
@@ -96,14 +96,13 @@ func TestImportDB(t *testing.T) {
 		if tmpCountryID != countryID{
 			continue
 		}
-
 		tmpRegionId := vec_CityRecords[1]
 		RegioneName := regionCodeMap[tmpRegionId]
 		zipCodes := zipCodeMap[vec_CityRecords[0]]
 		if len(zipCodes) == 0{
-			panic("error")
+			//不能为空
+			continue
 		}
-
 		if regionMap[RegioneName] == nil{
 			regionMap[RegioneName] = make(CityData)
 		}
@@ -125,8 +124,8 @@ func TestImportDB(t *testing.T) {
 
 	for eProvinceName,eCityMap := range regionMap{
 		for eCityName,eZipCodeList := range eCityMap{
-			strZipCodes, _ := json.Marshal(eZipCodeList)
-			_,err = stat.Exec(eProvinceName,eCityName,string(strZipCodes))
+			zipCodeBytes, _ := json.Marshal(eZipCodeList)
+			_,err = stat.Exec(eProvinceName,eCityName,string(zipCodeBytes))
 			if err != nil{
 				log.Panicln(err)
 			}

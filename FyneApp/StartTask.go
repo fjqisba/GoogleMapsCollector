@@ -20,7 +20,7 @@ func (this *FyneApp)StartTask(vec_KeyWords []string)error  {
 
 	//开始正式处理任务
 	log.Println("开始生成任务")
-	targetCountry := this.countryList[this.select_Country.SelectedIndex()]
+	targetCountry := this.countryTableList[this.select_Country.SelectedIndex()]
 	log.Println("采集国家:",targetCountry)
 
 	type ZipCodeData struct {
