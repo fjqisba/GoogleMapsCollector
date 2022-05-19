@@ -6,10 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Location.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Location.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module/EmailMiner/EmailMiner.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/EmailMiner/EmailMiner.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +60,14 @@
     </key>
   </component>
   <component name="RunManager" selected="Go Build.go build GoogleMapsCollector">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build GoogleMapsCollector" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$" />
@@ -83,6 +91,19 @@
       <pattern value="^\QTestFixDB\E$" />
       <method v="2" />
     </configuration>
+    <configuration name="TestGetEmail in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$/TestUnit" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="GoogleMapsCollector/TestUnit" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <output_directory value="$PROJECT_DIR$/bin" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetEmail\E$" />
+      <method v="2" />
+    </configuration>
     <configuration name="TestImportDB in GoogleMapsCollector/TestUnit" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$/TestUnit" />
@@ -96,14 +117,25 @@
       <pattern value="^\QTestImportDB\E$" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Go Build.go build GoogleMapsCollector" />
       <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
       <item itemvalue="Go Test.TestFixDB in GoogleMapsCollector/TestUnit" />
+      <item itemvalue="Go Test.TestGetEmail in GoogleMapsCollector/TestUnit" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build GoogleMapsCollector" />
+        <item itemvalue="Go Test.TestGetEmail in GoogleMapsCollector/TestUnit" />
         <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
         <item itemvalue="Go Test.TestFixDB in GoogleMapsCollector/TestUnit" />
       </list>
@@ -126,6 +158,11 @@
           <url>file://$PROJECT_DIR$/Model/CollectionTask.go</url>
           <line>39</line>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/TestUnit/GetEmail_test.go</url>
+          <line>11</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

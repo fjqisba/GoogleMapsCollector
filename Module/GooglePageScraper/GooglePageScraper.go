@@ -5,6 +5,7 @@ import (
 	"GoogleMapsCollector/Model"
 	"GoogleMapsCollector/Module/CsvResult"
 	"GoogleMapsCollector/Module/EmailMiner"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -115,6 +116,8 @@ func parseAddress(scrapeData *Model.ScraperData)  {
 
 }
 
+
+
 func GetData(task* Model.CollectionTask,pageUrl string)  {
 	var tmpScraperData Model.ScraperData
 	log.Println("开始采集地址:",pageUrl)
@@ -183,7 +186,11 @@ func GetData(task* Model.CollectionTask,pageUrl string)  {
 	}
 
 	if tmpScraperData.Website != ""{
-		tmpScraperData.Email = EmailMiner.GetEmail(tmpScraperData.Website)
+		emailList := EmailMiner.GetEmail(tmpScraperData.Website)
+		if len(emailList) > 0{
+			emailBytes,_ := json.Marshal(emailList)
+			tmpScraperData.Email = string(emailBytes)
+		}
 	}
 
 	//写出结果
