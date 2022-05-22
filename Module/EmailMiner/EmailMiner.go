@@ -1,16 +1,20 @@
 package EmailMiner
 
 import (
+	"GoogleMapsCollector/ConfigManager"
 	"GoogleMapsCollector/Logger"
 	"GoogleMapsCollector/Module/EmailChecker"
-	"fmt"
 	"github.com/weppos/publicsuffix-go/publicsuffix"
+	"log"
+
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 )
 
 const strRegex_Email = `(mailto\\:|)([\\w\\.\\-]+)@((([\\-\\w]+\\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\\.){3}[0-9]{1,3}))`
@@ -37,75 +41,56 @@ var(
 	"contacto","general","sales","purchase","order","commercial","office","gm"}
 )
 
-func findCorrectEmail(items [][]string)string  {
-	for _,array := range items{
-		str := strings.ToLower(array[0])
-		if strings.Index(str,"@mail.com") != -1{
-			continue
-		}
-		if strings.Index(str,"example") != -1{
-			continue
-		}
-		if strings.Index(str,".jpg") != -1{
-			continue
-		}
-		if strings.Index(str,".wix") != -1{
-			continue
-		}
-		if strings.Index(str,".png") != -1{
-			continue
-		}
-		return array[0]
+//返回true表示过滤
+func filterEmail(emailAddr string)bool  {
+	str := strings.ToLower(emailAddr)
+	if strings.HasSuffix(str,".jpg") == true{
+		return true
 	}
-	return ""
+	if strings.HasSuffix(str,".gif") == true{
+		return true
+	}
+	if strings.Index(str,"@mail.com") != -1{
+		return true
+	}
+	if strings.Index(str,"example") != -1{
+		return true
+	}
+	if strings.Index(str,".wix") != -1{
+		return true
+	}
+	if strings.Index(str,".png") != -1{
+		return true
+	}
+	if strings.Index(str,"sentry.io") != -1{
+		return true
+	}
+	return false
 }
 
-func detectUrl(url string,items [][]string)string  {
-	for _,array := range items{
-		for _,value := range contactPage{
-			str := strings.ToLower(array[2])
-			if strings.Index(str,value) == -1{
-				continue
-			}
-			text := array[2]
-			if strings.Index(text,"http") == -1{
-				if text[0] == '/'{
-					text = strings.TrimRight(url,"/") + text
-				}else{
-					tmpUrl := strings.TrimRight(url,"/")
-					tmpUrl = strings.ReplaceAll(tmpUrl,"http://","")
-					text = tmpUrl + "/" + text
-				}
-			}else{
-				text2 := strings.ReplaceAll(url,"http://","")
-				text2 = strings.ReplaceAll(text2,"https://","")
-				text2 = strings.ReplaceAll(text2,"www","")
-				vec_Split := strings.Split(text2,"/")
-				if len(vec_Split) == 0{
-					continue
-				}
-				text2 = vec_Split[0]
-				if strings.Index(text,text2) == -1{
-					continue
-				}
-			}
-			if text == ""{
-				continue
-			}
-			html := getPage(text)
-			matchList := regex_Email.FindAllStringSubmatch(html,-1)
-			if len(matchList) > 0{
-				return findCorrectEmail(matchList)
-			}
+func getHtmlContent(pageUrl string)string  {
+	proxyFunc := http.ProxyFromEnvironment
+	proxyUrl := ConfigManager.Instance.GetSystemProxy()
+	if proxyUrl != ""{
+		proxyFunc = func(req *http.Request) (*url.URL, error){
+			return url.Parse("http://" + proxyUrl)
 		}
 	}
-	return ""
-}
-
-
-func getPage(website string)string  {
-	resp,err := http.Get(website)
+	xClient := http.Client{
+		Transport: &http.Transport{
+			DisableKeepAlives:true,
+			Proxy: proxyFunc,
+		},
+		Timeout: 30 * time.Second,
+	}
+	hReq,err := http.NewRequest("GET",pageUrl,nil)
 	if err != nil{
+		return ""
+	}
+	hReq.Header.Set("User-Agent","Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 96.0.4664.45 Safari / 537.36")
+	resp,err := xClient.Do(hReq)
+	if err != nil{
+		log.Println("访问链接出错",pageUrl,":",err)
 		return ""
 	}
 	defer resp.Body.Close()
@@ -137,16 +122,17 @@ func (this *EmailMiner)guessEmail(domain string){
 }
 
 func (this *EmailMiner)exoploreUrl(expUrl string)  {
-	this.wg.Add(1)
 	defer this.wg.Done()
-
-	html := getPage(expUrl)
-	matchList := regex_Email.FindAllStringSubmatch(html,20)
-	if len(matchList) > 0{
-		//To do...
-	}
+	this.wg.Add(1)
+	html := getHtmlContent(expUrl)
 	vec_EmailList := regex_GenEmail.FindAllString(html,20)
 	for _,eCheckEmail := range vec_EmailList{
+		if filterEmail(eCheckEmail) == true{
+			continue
+		}
+		if EmailChecker.IsValidEmail(eCheckEmail) == false{
+			continue
+		}
 		this.insertEmail(eCheckEmail)
 	}
 }

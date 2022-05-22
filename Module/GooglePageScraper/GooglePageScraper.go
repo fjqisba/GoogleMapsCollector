@@ -27,7 +27,7 @@ const strRegex_PostalCode4 = `, (.*), (.*) (\\d{5,6})`
 
 const strRegex_Landtitude = `https://www.google.com/maps/preview/place/([^/]+)/@(.*?),(.*?),`
 
-const strRegex_Website = `-,null,null,->\"(.*?)>\",`
+const strRegex_Website = `null,->\"(http.+?)>\",`
 const strRegex_Phone = `tel:(.*?)>\"`
 
 var(
@@ -46,8 +46,51 @@ var(
 	regex_Phone *regexp.Regexp
 )
 
-func getGooglePageHtml(pageUrl string)string  {
 
+
+//尝试从地址中解析出邮政编码和城市
+func parseAddress(scrapeData *Model.ScraperData)  {
+
+	tmpMatchList := regex_PostalCode1.FindStringSubmatch(scrapeData.Address)
+	if len(tmpMatchList) > 0{
+		scrapeData.PostalCode = tmpMatchList[1]
+		scrapeData.City = tmpMatchList[2]
+		return
+	}
+
+	tmpMatchList = regex_PostalCode2.FindStringSubmatch(scrapeData.Address)
+	if len(tmpMatchList) > 0{
+		scrapeData.PostalCode = tmpMatchList[1]
+		scrapeData.City = tmpMatchList[2]
+		return
+	}
+	tmpMatchList = regex_PostalCode3.FindStringSubmatch(scrapeData.Address)
+	if len(tmpMatchList) > 0{
+		scrapeData.PostalCode = tmpMatchList[1]
+		scrapeData.City = tmpMatchList[2]
+		return
+	}
+	tmpMatchList = regex_PostalCode4.FindStringSubmatch(scrapeData.Address)
+	if len(tmpMatchList) > 0{
+		scrapeData.PostalCode = tmpMatchList[1]
+		scrapeData.City = tmpMatchList[3]
+		return
+	}
+}
+
+func DetectWebsite(matchUrl string)string{
+	if strings.Index(matchUrl,"googleusercontent.com") != -1{
+		return ""
+	}
+	if strings.Index(matchUrl,"www.google.com") != -1{
+		return ""
+	}
+	matchUrl = strings.ReplaceAll(matchUrl,">>u003d","=")
+	matchUrl = strings.ReplaceAll(matchUrl,">>u0026","&")
+	return matchUrl
+}
+
+func getHtmlContent(pageUrl string)string  {
 	proxyFunc := http.ProxyFromEnvironment
 	proxyUrl := ConfigManager.Instance.GetSystemProxy()
 	if proxyUrl != ""{
@@ -55,15 +98,13 @@ func getGooglePageHtml(pageUrl string)string  {
 			return url.Parse("http://" + proxyUrl)
 		}
 	}
-
 	xClient := http.Client{
 		Transport: &http.Transport{
 			DisableKeepAlives:true,
 			Proxy: proxyFunc,
 		},
-		Timeout: 30 * time.Second,
+		Timeout: 60 * time.Second,
 	}
-
 	hReq,err := http.NewRequest("GET",pageUrl,nil)
 	if err != nil{
 		return ""
@@ -82,50 +123,13 @@ func getGooglePageHtml(pageUrl string)string  {
 	return string(respBytes)
 }
 
-//尝试从地址中解析出邮政编码和城市
-func parseAddress(scrapeData *Model.ScraperData)  {
-
-	tmpMatchList := regex_PostalCode1.FindStringSubmatch(scrapeData.Address)
-	if len(tmpMatchList) > 0{
-		scrapeData.PostalCode = tmpMatchList[1]
-		scrapeData.City = tmpMatchList[2]
-		return
-	}
-
-	tmpMatchList = regex_PostalCode2.FindStringSubmatch(scrapeData.Address)
-	if len(tmpMatchList) > 0{
-		scrapeData.PostalCode = tmpMatchList[1]
-		scrapeData.City = tmpMatchList[2]
-		return
-	}
-
-	tmpMatchList = regex_PostalCode3.FindStringSubmatch(scrapeData.Address)
-	if len(tmpMatchList) > 0{
-		scrapeData.PostalCode = tmpMatchList[1]
-		scrapeData.City = tmpMatchList[2]
-		return
-	}
-
-	tmpMatchList = regex_PostalCode4.FindStringSubmatch(scrapeData.Address)
-	if len(tmpMatchList) > 0{
-		scrapeData.PostalCode = tmpMatchList[1]
-		scrapeData.City = tmpMatchList[3]
-		return
-	}
-
-
-}
-
-
-
 func GetData(task* Model.CollectionTask,pageUrl string)  {
 	var tmpScraperData Model.ScraperData
 	log.Println("开始采集地址:",pageUrl)
 	tmpScraperData.Category = task.Category
 	tmpScraperData.State = task.State
 	tmpScraperData.GoogleUrl = pageUrl
-
-	html := getGooglePageHtml(pageUrl)
+	html := getHtmlContent(pageUrl)
 	if html == ""{
 		return
 	}
@@ -173,10 +177,7 @@ func GetData(task* Model.CollectionTask,pageUrl string)  {
 	//解析网站
 	tmpMatchList = regex_Website.FindStringSubmatch(html)
 	if len(tmpMatchList) > 0{
-		webSite := tmpMatchList[1]
-		if strings.Index(webSite,":") > -1 && strings.Index(webSite,"google") == -1{
-			tmpScraperData.Website = webSite
-		}
+		tmpScraperData.Website = DetectWebsite(tmpMatchList[1])
 	}
 
 	//解析电话

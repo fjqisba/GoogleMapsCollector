@@ -137,7 +137,7 @@ func (this *TaskManager)handleZipCodeTask(eZipCodeTask *Model.CollectionTask)boo
 		this.wgFinish.Add(1)
 		threadCount = threadCount + 1
 		go this.startScrapeTask(eZipCodeTask,fmt.Sprintf("https://maps.google.com/?cid=0x0:0x%s",tmpIdKey))
-		if threadCount >= 8{
+		if threadCount >= 5{
 			this.wgFinish.Wait()
 			threadCount = 0
 		}

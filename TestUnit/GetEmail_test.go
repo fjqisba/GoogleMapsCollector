@@ -2,13 +2,15 @@ package TestUnit
 
 import (
 	"GoogleMapsCollector/Module/EmailMiner"
+	"GoogleMapsCollector/Utils/ProjectPath"
 	"log"
+	"os"
 	"testing"
 )
 
 func TestGetEmail(t *testing.T) {
 
-	webSite := "http://www.futurelighting.com/contact"
-	emailList := EmailMiner.GetEmail(webSite)
+	os.Setenv("google-chrome",ProjectPath.GProjectBinPath + "\\chrome\\chrome.exe")
+	emailList := EmailMiner.GetEmail("https://urbanlightsdenver.com/about")
 	log.Println(emailList)
 }

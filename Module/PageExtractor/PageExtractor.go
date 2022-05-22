@@ -49,7 +49,7 @@ func getPage(url string)string  {
 //返回不重复的页面列表
 
 func ExtractPage(url string)(ret []string)  {
-	html := PhantomJS.Instance.ScrapeGoogleMapHtml(url)
+	html := PhantomJS.ScrapeGoogleMapHtml(url)
 	index := strings.Index(html,"<<FirstPageEnd>>")
 	if index == -1{
 		return ret
