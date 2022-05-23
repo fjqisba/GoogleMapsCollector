@@ -6,6 +6,7 @@ import (
 	"GoogleMapsCollector/TaskManager"
 	"GoogleMapsCollector/TaskManager/TaskSignal"
 	"GoogleMapsCollector/Utils/ProjectPath"
+	"bufio"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
@@ -14,6 +15,9 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/gin-gonic/gin"
+	"os"
+	"strings"
 )
 
 
@@ -25,6 +29,9 @@ type FyneApp struct {
 	select_Country *widget.Select
 	select_State *widget.Select
 	select_City *widget.List
+
+	select_Server *widget.Select
+
 	button_SelectAllCity *widget.Button
 	button_StartTask *widget.Button
 	entry_KeyWord *widget.Entry
@@ -36,7 +43,10 @@ type FyneApp struct {
 	countryTableList []string
 	//城市列表,[]*CitySelectData
 	cityList binding.UntypedList
+	//服务器列表
+	serverList []string
 }
+
 
 func NewFyneApp()*FyneApp  {
 	return &FyneApp{
@@ -70,6 +80,7 @@ func (this *FyneApp)makeMainMenu()*fyne.MainMenu  {
 func (this *FyneApp)onConfirmClose(bConfirm bool) {
 	if bConfirm == true{
 		this.mainWindow.Close()
+		os.Exit(0)
 	}
 }
 
@@ -77,6 +88,7 @@ func (this *FyneApp)onCloseWindow()  {
 
 	if TaskSignal.GetTaskStatus() == Model.TASK_START{
 		this.mainWindow.Close()
+		os.Exit(0)
 		return
 	}
 
@@ -85,6 +97,22 @@ func (this *FyneApp)onCloseWindow()  {
 	errHnd.SetConfirmText("强制退出")
 	errHnd.SetDismissText("取消")
 	errHnd.Show()
+}
+
+func (this *FyneApp)loadServerList()  {
+
+	this.serverList = append(this.serverList,"本地机器")
+	hFile,err := os.Open(ProjectPath.GProjectBinPath + "\\server.txt")
+	if err != nil{
+		return
+	}
+	defer hFile.Close()
+	hScan := bufio.NewScanner(hFile)
+	for hScan.Scan(){
+		serverApi := hScan.Text()
+		serverApi = strings.TrimSpace(serverApi)
+		this.serverList = append(this.serverList, serverApi)
+	}
 }
 
 func (this *FyneApp)InitializeComponent()error  {
@@ -172,12 +200,26 @@ func (this *FyneApp)InitializeComponent()error  {
 	customerLayout.Add(this.entry_KeyWord)
 	customerLayout.Add(label_keyword)
 
+	//添加服务选择
+	label_selectServer := widget.NewLabel("选择服务器:")
+	label_selectServer.Move(fyne.NewPos(120,380))
+
+	this.loadServerList()
+	this.select_Server = widget.NewSelect(this.serverList, func(s string) {})
+	if this.select_Server == nil{
+		os.Exit(0)
+	}
+	this.select_Server.PlaceHolder = "本地机器"
+	this.select_Server.Resize(fyne.NewSize(200,50))
+	this.select_Server.Move(fyne.NewPos(130,430))
+	customerLayout.Add(label_selectServer)
+	customerLayout.Add(this.select_Server)
+
 	//添加任务按钮
 	this.button_StartTask = widget.NewButton("开始任务", this.TaskHandlerEntry)
-	this.button_StartTask.Move(fyne.NewPos(270,430))
 	this.button_StartTask.Resize(fyne.NewSize(200,120))
+	this.button_StartTask.Move(fyne.NewPos(360,400))
 	customerLayout.Add(this.button_StartTask)
-
 	this.mainWindow.SetContent(customerLayout)
 	return nil
 }
@@ -258,6 +300,12 @@ func (this *FyneApp)OnSelectAllCity()  {
 	return
 }
 
+func (this *FyneApp)RunServer()  {
+	gin.SetMode(gin.ReleaseMode)
+	ginServer := gin.New()
+	ginServer.POST("/addwork", this.addWorkHandler)
+	ginServer.Run("0.0.0.0:32666")
+}
 
 func (this *FyneApp)InitApp()error  {
 

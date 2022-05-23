@@ -26,8 +26,6 @@ type TaskManager struct {
 	TaskFinishCB func()
 }
 
-
-
 //传入任务,采集指定的页面地址,返回数据列表
 func (this *TaskManager)startCollectTask(task *Model.CollectionTask)(ret []string)  {
 
