@@ -16,6 +16,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/gin-gonic/gin"
+	"log"
 	"os"
 	"strings"
 )
@@ -304,6 +305,7 @@ func (this *FyneApp)RunServer()  {
 	gin.SetMode(gin.ReleaseMode)
 	ginServer := gin.New()
 	ginServer.POST("/addwork", this.addWorkHandler)
+	log.Println("开启爬虫服务127.0.0.1,端口:32666")
 	ginServer.Run("0.0.0.0:32666")
 }
 

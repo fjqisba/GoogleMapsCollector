@@ -5,15 +5,18 @@ import (
 	"GoogleMapsCollector/Model"
 	"GoogleMapsCollector/TaskManager"
 	"GoogleMapsCollector/TaskManager/TaskSignal"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"fyne.io/fyne/v2/dialog"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"strings"
 )
 
-func (this *FyneApp)WorkApi(workParam *Model.WorkParam)error  {
+func WorkApi(workParam *Model.WorkParam)error  {
 	type ZipCodeData struct {
 		Region string		`db:"region"`
 		City string			`db:"city"`
@@ -30,7 +33,7 @@ func (this *FyneApp)WorkApi(workParam *Model.WorkParam)error  {
 	}else{
 		stmt := fmt.Sprintf("select region,city,zip_codes FROM %s where region=? and city=?",workParam.CountryName)
 		for _,eCityName := range workParam.CityList{
-			rows,_ := DataBase.GLocationDB.Sqlx.Query(stmt,this.select_State.Selected,eCityName)
+			rows,_ := DataBase.GLocationDB.Sqlx.Query(stmt,workParam.StateName,eCityName)
 			if rows == nil{
 				continue
 			}
@@ -101,7 +104,7 @@ func (this *FyneApp)StartTask(vec_KeyWords []string)error  {
 		workParam.CityList = append(workParam.CityList, cityName)
 	}
 
-	return this.WorkApi(&workParam)
+	return WorkApi(&workParam)
 }
 
 func (this *FyneApp)onTaskFinished()  {
@@ -151,17 +154,74 @@ func (this *FyneApp)preCheckTaskParam()([]string,bool)  {
 	return vec_KeyWords,true
 }
 
-func (this *FyneApp)pushRemoteTask()  {
+func (this *FyneApp)pushRemoteTask(vec_KeyWords []string)  {
 
+	var workParam Model.WorkParam
 
+	//开始正式处理任务
+	log.Println("开始生成任务")
+	workParam.Category = vec_KeyWords
+	workParam.CountryName = this.countryTableList[this.select_Country.SelectedIndex()]
+	log.Println("采集国家:",workParam.CountryName)
 
+	workParam.StateName = this.select_State.Selected
+	citySelectList,_ := this.cityList.Get()
+	for _,eCitySelect := range citySelectList {
+		bSelect, _ := eCitySelect.(*Model.CitySelectData).CitySwitch.Get()
+		if bSelect == false {
+			continue
+		}
+		cityName := eCitySelect.(*Model.CitySelectData).CityName
+		workParam.CityList = append(workParam.CityList, cityName)
+	}
 
+	workBytes,_ := json.Marshal(workParam)
+	resp,err := http.Post("http://" + this.select_Server.Selected + "/addwork",
+		"application/json",bytes.NewReader(workBytes))
+	if err != nil{
+		log.Println("投递任务失败:",err)
+		return
+	}
+	defer resp.Body.Close()
+	respBytes,err := ioutil.ReadAll(resp.Body)
+	if err != nil{
+		log.Println("读取结果失败:",err)
+		return
+	}
+	type retMsg struct {
+		Code int `json:"code"`
+		Msg string `json:"msg"`
+	}
+	var retJson retMsg
+	err = json.Unmarshal(respBytes,&retJson)
+	if err != nil{
+		return
+	}
+	if retJson.Code != 200{
+		errWnd := dialog.NewError(errors.New(retJson.Msg),this.mainWindow)
+		errWnd.SetDismissText("好的")
+		errWnd.Show()
+		return
+	}
+	infoWnd := dialog.NewInformation("成功","投递任务成功",this.mainWindow)
+	infoWnd.SetDismissText("好的")
+	infoWnd.Show()
 }
 
 func (this *FyneApp)TaskHandlerEntry() {
 
 
 	currentState := TaskSignal.GetTaskStatus()
+
+	//检查是远程服务
+	if this.select_Server.Selected != "本地机器" && this.select_Server.Selected != ""{
+		keyWordList,bCheckResult := this.preCheckTaskParam()
+		if bCheckResult == false{
+			return
+		}
+		this.pushRemoteTask(keyWordList)
+		return
+	}
 
 	//开始任务
 	if currentState == Model.TASK_START{
@@ -170,17 +230,15 @@ func (this *FyneApp)TaskHandlerEntry() {
 		if bCheckResult == false{
 			return
 		}
-		if this.select_Server.Selected == "本地机器" || this.select_Server.Selected == ""{
-			TaskSignal.SetTaskStatus(Model.TASK_EXECUTE)
-			this.StartTask(keyWordList)
-		}else{
-			this.pushRemoteTask()
-		}
+		TaskSignal.SetTaskStatus(Model.TASK_EXECUTE)
+		this.StartTask(keyWordList)
 	}
 
 	//结束任务
 	if currentState == Model.TASK_EXECUTE {
 		TaskSignal.SetTaskStatus(Model.TASK_STOP)
 		go this.StopTask()
+
+
 	}
 }

@@ -18,9 +18,8 @@ func main() {
 	fyne := FyneApp.NewFyneApp()
 	err = fyne.InitApp()
 	if err != nil{
-		log.Println(err)
+		log.Panicln(err)
 	}
 	fyne.Run()
-	log.Println("客户端模式启动")
 	fyne.RunServer()
 }

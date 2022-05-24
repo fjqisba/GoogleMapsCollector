@@ -32,7 +32,7 @@ func (this *FyneApp)addWorkHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, retJson)
 		return
 	}
-	err = this.WorkApi(&workMsg)
+	err = WorkApi(&workMsg)
 	if err != nil{
 		retJson["code"] = 204
 		retJson["msg"] = err.Error()

@@ -8,10 +8,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FyneApp/WorkHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/WorkHandler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager/TaskManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/TaskManager.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/server.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/server.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rsrc.syso" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,10 +123,10 @@
     </configuration>
     <list>
       <item itemvalue="Go Build.go build GoogleMapsCollector" />
+      <item itemvalue="Go Build.go build GoogleMapsCollector/UI2Walk" />
       <item itemvalue="Go Test.TestImportDB in GoogleMapsCollector/TestUnit" />
       <item itemvalue="Go Test.TestGetEmail in GoogleMapsCollector/TestUnit" />
       <item itemvalue="Go Test.TestParseAddr in GoogleMapsCollector/TestUnit" />
-      <item itemvalue="Go Build.go build GoogleMapsCollector/UI2Walk" />
     </list>
     <recent_temporary>
       <list>

@@ -118,6 +118,11 @@ func (this *TaskManager)handleZipCodeTask(eZipCodeTask *Model.CollectionTask)boo
 		return false
 	}
 	log.Println("创建csv任务:",fileName)
+	log.Println("国家:",eZipCodeTask.Country)
+	log.Println("省份:",eZipCodeTask.State)
+	log.Println("城市:",eZipCodeTask.City)
+	log.Println("邮编:",eZipCodeTask.ZipCode)
+	log.Println("搜索关键字:",eZipCodeTask.Category)
 	defer CsvResult.Instance.CloseCsv()
 
 	idList := this.startCollectTask(eZipCodeTask)
