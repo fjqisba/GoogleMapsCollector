@@ -305,7 +305,7 @@ func (this *FyneApp)RunServer()  {
 	gin.SetMode(gin.ReleaseMode)
 	ginServer := gin.New()
 	ginServer.POST("/addwork", this.addWorkHandler)
-	log.Println("开启爬虫服务127.0.0.1,端口:32666")
+	log.Println("Start Collector Server,127.0.0.1:32666")
 	ginServer.Run("0.0.0.0:32666")
 }
 

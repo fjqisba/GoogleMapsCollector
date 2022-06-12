@@ -49,7 +49,7 @@ func (this *TaskManager)startCollectTask(task *Model.CollectionTask)(ret []strin
 		return ret
 	}
 
-	log.Println("采集地址数量小于预期,扩大搜索范围:",len(ret))
+	log.Println("number of collection is less than expected,expand search range:",len(ret))
 
 	//执行第二次采集任务
 	tmpTaskList = task.CollectLocationIDList2()
@@ -66,7 +66,7 @@ func (this *TaskManager)startCollectTask(task *Model.CollectionTask)(ret []strin
 		return ret
 	}
 
-	log.Println("采集地址数量小于预期,继续扩大搜索范围:",len(ret))
+	log.Println("number of collection is less than expected,continue expand search range:",len(ret))
 	//执行第三次采集任务
 	tmpTaskList = task.CollectLocationIDList3()
 	for _,eTask := range tmpTaskList{
@@ -114,21 +114,21 @@ func (this *TaskManager)handleZipCodeTask(eZipCodeTask *Model.CollectionTask)boo
 	fileName := eZipCodeTask.Country + "_" + time.Now().Format("20060102150405") + ".csv"
 	err := CsvResult.Instance.OpenCsv(fileName)
 	if err != nil{
-		log.Println("创建csv文件失败")
+		log.Println("create csv file failed")
 		return false
 	}
-	log.Println("创建csv任务:",fileName)
-	log.Println("国家:",eZipCodeTask.Country)
-	log.Println("省份:",eZipCodeTask.State)
-	log.Println("城市:",eZipCodeTask.City)
-	log.Println("邮编:",eZipCodeTask.ZipCode)
-	log.Println("搜索关键字:",eZipCodeTask.Category)
+	log.Println("create task file:",fileName)
+	log.Println("country:",eZipCodeTask.Country)
+	log.Println("state:",eZipCodeTask.State)
+	log.Println("city:",eZipCodeTask.City)
+	log.Println("zip:",eZipCodeTask.ZipCode)
+	log.Println("keywords:",eZipCodeTask.Category)
 	defer CsvResult.Instance.CloseCsv()
 
 	idList := this.startCollectTask(eZipCodeTask)
-	log.Println("生成地址(条):",len(idList))
+	log.Println("count of generated task:",len(idList))
 	if TaskSignal.GetTaskStatus() == Model.TASK_STOP{
-		log.Println("用户点击停止任务,返回")
+		log.Println("Admin pressed the stop button,the task is stopped")
 		return true
 	}
 	if len(idList) == 0{
@@ -145,7 +145,7 @@ func (this *TaskManager)handleZipCodeTask(eZipCodeTask *Model.CollectionTask)boo
 			threadCount = 0
 		}
 		if TaskSignal.GetTaskStatus() == Model.TASK_STOP{
-			log.Println("用户点击停止任务")
+			log.Println("Admin pressed the stop button,the task is stopped")
 			this.wgFinish.Wait()
 			return true
 		}

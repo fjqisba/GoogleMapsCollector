@@ -24,6 +24,7 @@ PRIMARY KEY(region,city));`
 
 
 
+
 func TestImportDB(t *testing.T) {
 
 	//填充以下三个字段

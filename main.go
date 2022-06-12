@@ -11,7 +11,7 @@ import (
 func main() {
 	_, err := Utils.CreateMutex("GoogleMapCollector")
 	if err != nil{
-		log.Println("程序禁止多开")
+		log.Println("Program prohibits multi-opening")
 		return
 	}
 	os.Setenv("google-chrome",ProjectPath.GProjectBinPath + "\\chrome\\chrome.exe")

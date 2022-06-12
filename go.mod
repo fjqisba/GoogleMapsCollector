@@ -9,7 +9,11 @@ require (
 
 require (
 	github.com/AfterShip/email-verifier v1.3.0 // indirect
+	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
+	github.com/andybalholm/cascadia v1.3.1 // indirect
+	github.com/antchfx/htmlquery v1.2.5 // indirect
+	github.com/antchfx/xpath v1.2.1 // indirect
 	github.com/chromedp/cdproto v0.0.0-20220503213059-d217b1e06d24 // indirect
 	github.com/chromedp/chromedp v0.8.1 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
@@ -29,7 +33,9 @@ require (
 	github.com/gobwas/ws v1.1.0 // indirect
 	github.com/godbus/dbus/v5 v5.0.4 // indirect
 	github.com/goki/freetype v0.0.0-20181231101311-fa8a33aabaff // indirect
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.3.3 // indirect
+	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20220221023154-0b2280d3ff96 // indirect
 	github.com/hbollon/go-edlib v1.6.0 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
@@ -49,6 +55,7 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20200311192757-870daf9aa564 // indirect
 	github.com/srwiley/rasterx v0.0.0-20200120212402-85cb7272f5e9 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/therecipe/env_darwin_amd64_513 v0.0.0-20190626001412-d8e92e8db4d0 // indirect
 	github.com/therecipe/env_linux_amd64_513 v0.0.0-20190626000307-e137a3934da6 // indirect
 	github.com/therecipe/env_windows_amd64_513 v0.0.0-20190626000028-79ec8bd06fb2 // indirect

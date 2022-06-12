@@ -90,7 +90,7 @@ func getHtmlContent(pageUrl string)string  {
 	hReq.Header.Set("User-Agent","Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 96.0.4664.45 Safari / 537.36")
 	resp,err := xClient.Do(hReq)
 	if err != nil{
-		log.Println("访问链接出错",pageUrl,":",err)
+		log.Println("access url failed",pageUrl,":",err)
 		return ""
 	}
 	defer resp.Body.Close()

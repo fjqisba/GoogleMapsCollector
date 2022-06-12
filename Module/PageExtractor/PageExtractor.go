@@ -58,7 +58,7 @@ func ExtractPage(url string)(ret []string)  {
 	tmpMap := make(map[string]struct{})
 	for _,eResult := range result{
 		if len(eResult) != 2{
-			Logger.ErrorLogger.Error("解析Html失败",eResult)
+			Logger.ErrorLogger.Error("parse html failed",eResult)
 			continue
 		}
 		if _,bExists := tmpMap[eResult[1]];bExists == false{

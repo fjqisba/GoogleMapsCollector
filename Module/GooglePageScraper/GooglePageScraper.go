@@ -2,6 +2,7 @@ package GooglePageScraper
 
 import (
 	"GoogleMapsCollector/ConfigManager"
+	"GoogleMapsCollector/DataBase"
 	"GoogleMapsCollector/Model"
 	"GoogleMapsCollector/Module/CsvResult"
 	"GoogleMapsCollector/Module/EmailMiner"
@@ -35,29 +36,23 @@ var(
 	regex_BusinessName *regexp.Regexp
 	regex_Address *regexp.Regexp
 	regex_City *regexp.Regexp
-
 	regex_PostalCode1 *regexp.Regexp
 	regex_PostalCode2 *regexp.Regexp
 	regex_PostalCode3 *regexp.Regexp
 	regex_PostalCode4 *regexp.Regexp
-
 	regex_Landtitude *regexp.Regexp
 	regex_Website *regexp.Regexp
 	regex_Phone *regexp.Regexp
 )
 
-
-
 //尝试从地址中解析出邮政编码和城市
 func parseAddress(scrapeData *Model.ScraperData)  {
-
 	tmpMatchList := regex_PostalCode1.FindStringSubmatch(scrapeData.Address)
 	if len(tmpMatchList) > 0{
 		scrapeData.PostalCode = tmpMatchList[1]
 		scrapeData.City = tmpMatchList[2]
 		return
 	}
-
 	tmpMatchList = regex_PostalCode2.FindStringSubmatch(scrapeData.Address)
 	if len(tmpMatchList) > 0{
 		scrapeData.PostalCode = tmpMatchList[1]
@@ -112,7 +107,7 @@ func getHtmlContent(pageUrl string)string  {
 	hReq.Header.Set("User-Agent","Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 96.0.4664.45 Safari / 537.36")
 	resp,err := xClient.Do(hReq)
 	if err != nil{
-		log.Println("访问链接出错",pageUrl,":",err)
+		log.Println("access url failed",pageUrl,":",err)
 		return ""
 	}
 	defer resp.Body.Close()
@@ -124,9 +119,18 @@ func getHtmlContent(pageUrl string)string  {
 }
 
 func GetData(task* Model.CollectionTask,pageUrl string)  {
-	var tmpScraperData Model.ScraperData
-	log.Println("开始采集地址:",pageUrl)
+
+	log.Println("start analyze url:",pageUrl)
+
+	tmpScraperData := DataBase.GLocationIndex.GetLocationData(pageUrl)
 	tmpScraperData.Category = task.Category
+	if tmpScraperData.BusinessName != ""{
+		if time.Now().Sub(tmpScraperData.CreateTime) < 7 * 24 * time.Hour{
+			log.Println("read csv from cache:",pageUrl)
+			CsvResult.Instance.WriteResult(&tmpScraperData)
+			return
+		}
+	}
 	tmpScraperData.State = task.State
 	tmpScraperData.GoogleUrl = pageUrl
 	html := getHtmlContent(pageUrl)
@@ -194,8 +198,10 @@ func GetData(task* Model.CollectionTask,pageUrl string)  {
 		}
 	}
 
+	DataBase.GLocationIndex.SetLocationData(pageUrl,&tmpScraperData)
+
 	//写出结果
-	log.Println("采集结束,写入数据:",pageUrl)
+	log.Println("collect finish,write to csv:",pageUrl)
 	CsvResult.Instance.WriteResult(&tmpScraperData)
 }
 

@@ -71,7 +71,7 @@ func WorkApi(workParam *Model.WorkParam)error  {
 		}
 	}
 
-	log.Println("生成任务完成,总数:",len(CollectTaskList))
+	log.Println("Build task completed,count:",len(CollectTaskList))
 	TaskManager.GTaskManager.TaskList = CollectTaskList
 
 	TaskSignal.SetTaskStatus(Model.TASK_EXECUTE)
@@ -88,10 +88,10 @@ func (this *FyneApp)StartTask(vec_KeyWords []string)error  {
 	var workParam Model.WorkParam
 
 	//开始正式处理任务
-	log.Println("开始生成任务")
+	log.Println("Start building task")
 	workParam.Category = vec_KeyWords
 	workParam.CountryName = this.countryTableList[this.select_Country.SelectedIndex()]
-	log.Println("采集国家:",workParam.CountryName)
+	log.Println("do country:",workParam.CountryName)
 
 	workParam.StateName = this.select_State.Selected
 	citySelectList,_ := this.cityList.Get()
@@ -108,7 +108,7 @@ func (this *FyneApp)StartTask(vec_KeyWords []string)error  {
 }
 
 func (this *FyneApp)onTaskFinished()  {
-	log.Println("任务结束")
+	log.Println("task finished")
 	//恢复按钮使用
 	this.button_StartTask.Text = "开始任务"
 	this.button_StartTask.Enable()
@@ -159,10 +159,10 @@ func (this *FyneApp)pushRemoteTask(vec_KeyWords []string)  {
 	var workParam Model.WorkParam
 
 	//开始正式处理任务
-	log.Println("开始生成任务")
+	log.Println("Start building task")
 	workParam.Category = vec_KeyWords
 	workParam.CountryName = this.countryTableList[this.select_Country.SelectedIndex()]
-	log.Println("采集国家:",workParam.CountryName)
+	log.Println("do country:",workParam.CountryName)
 
 	workParam.StateName = this.select_State.Selected
 	citySelectList,_ := this.cityList.Get()
@@ -179,13 +179,13 @@ func (this *FyneApp)pushRemoteTask(vec_KeyWords []string)  {
 	resp,err := http.Post("http://" + this.select_Server.Selected + "/addwork",
 		"application/json",bytes.NewReader(workBytes))
 	if err != nil{
-		log.Println("投递任务失败:",err)
+		log.Println("post task failed:",err)
 		return
 	}
 	defer resp.Body.Close()
 	respBytes,err := ioutil.ReadAll(resp.Body)
 	if err != nil{
-		log.Println("读取结果失败:",err)
+		log.Println("read result failed:",err)
 		return
 	}
 	type retMsg struct {
