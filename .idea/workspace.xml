@@ -6,19 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="e7539ac5-2105-4c9a-87aa-05a3fbf4bb0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FyneApp/FyneApp.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/FyneApp.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FyneApp/StartTask.go" beforeDir="false" afterPath="$PROJECT_DIR$/FyneApp/StartTask.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ScraperData.go" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ScraperData.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Module/EmailMiner/EmailMiner.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/EmailMiner/EmailMiner.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/GooglePageScraper/GooglePageScraper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" beforeDir="false" afterPath="$PROJECT_DIR$/Module/PageExtractor/PageExtractor.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaskManager/TaskManager.go" beforeDir="false" afterPath="$PROJECT_DIR$/TaskManager/TaskManager.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/ImportDB_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TestUnit/ParseAddr_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/ParseAddr_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/setting.ini" beforeDir="false" afterPath="$PROJECT_DIR$/bin/setting.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestUnit/FixDenMark_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/FixDenMark_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TestUnit/ImportCountryTxt_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/TestUnit/ImportCountryTxt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Utils/Utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/Utils.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +61,7 @@
     <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/GolandProjects/WPServer" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ClientManagementPlatform/server" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
@@ -76,7 +70,15 @@
       <recent name="C:\Users\fjqisba\source\GoProject\GoogleMapsCollector\Module\HtmlParser" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build GoogleMapsCollector">
+  <component name="RunManager" selected="Go Test.TestImportCountryTxt in GoogleMapsCollector/TestUnit">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build GoogleMapsCollector" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="GoogleMapsCollector" />
       <working_directory value="$PROJECT_DIR$" />
@@ -135,6 +137,15 @@
       <pattern value="^\QTestImportDenMarkDB\E$" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="GoogleMapsCollector" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Go Build.go build GoogleMapsCollector" />
       <item itemvalue="Go Build.go build GoogleMapsCollector/UI2Walk" />
@@ -144,8 +155,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build GoogleMapsCollector" />
         <item itemvalue="Go Test.TestImportCountryTxt in GoogleMapsCollector/TestUnit" />
+        <item itemvalue="Go Build.go build GoogleMapsCollector" />
         <item itemvalue="Go Test.TestImportDenMarkDB in GoogleMapsCollector/TestUnit" />
         <item itemvalue="Go Test.TestFixDenMarkDB in GoogleMapsCollector/TestUnit" />
         <item itemvalue="Go Build.go build GoogleMapsCollector/UI2Walk" />
@@ -191,46 +202,56 @@
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/FyneApp/SettingWindow.go</url>
-          <line>44</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/FyneApp/SettingWindow.go</url>
-          <line>41</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/FixDenMark_test.go</url>
-          <line>181</line>
+          <line>183</line>
           <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/FixDenMark_test.go</url>
-          <line>187</line>
+          <line>189</line>
           <option name="timeStamp" value="68" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/FixDenMark_test.go</url>
-          <line>93</line>
+          <line>95</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/FixDenMark_test.go</url>
-          <line>97</line>
+          <line>99</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/FixDenMark_test.go</url>
-          <line>153</line>
+          <line>155</line>
           <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/TaskManager/TaskManager.go</url>
+          <line>129</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/TestUnit/ImportCountryTxt_test.go</url>
-          <line>19</line>
-          <option name="timeStamp" value="78" />
+          <line>230</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/TestUnit/ImportCountryTxt_test.go</url>
+          <line>212</line>
+          <option name="timeStamp" value="91" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/TestUnit/ImportCountryTxt_test.go</url>
+          <line>139</line>
+          <option name="timeStamp" value="113" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="GoTestRunConfiguration">
+        <watch expression="*(*&quot;golang.org/x/net/html.Node&quot;)(824669613232)" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

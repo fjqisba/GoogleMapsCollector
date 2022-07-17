@@ -58,14 +58,16 @@ func getCityData(task *cityTask)error  {
 func TestImportDenMarkDB(t *testing.T) {
 
 	//填充以下三个字段
-	countryName := "Iceland"
-	countryZHName := "冰岛"
+	countryName := "Greece"
+	countryZHName := "希腊"
 
-	hFile,err := os.Open("D:\\Ice.csv")
+	hFile,err := os.Open("D:\\希腊.txt")
 	if err != nil{
 		log.Panicln(err)
 	}
 	defer hFile.Close()
+
+	
 
 	_,err = DataBase.GLocationDB.Sqlx.Exec(fmt.Sprintf(stmt_createCountry,countryName))
 	if err != nil{

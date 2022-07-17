@@ -45,6 +45,8 @@ func (this *TaskManager)startCollectTask(task *Model.CollectionTask)(ret []strin
 	if len(ret) >= taskCount{
 		return ret[0:taskCount]
 	}
+	return ret
+
 	if TaskSignal.GetTaskStatus() == Model.TASK_STOP{
 		return ret
 	}

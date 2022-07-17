@@ -125,7 +125,7 @@ func GetData(task* Model.CollectionTask,pageUrl string)  {
 	tmpScraperData := DataBase.GLocationIndex.GetLocationData(pageUrl)
 	tmpScraperData.Category = task.Category
 	if tmpScraperData.BusinessName != ""{
-		if time.Now().Sub(tmpScraperData.CreateTime) < 7 * 24 * time.Hour{
+		if time.Now().Sub(tmpScraperData.CreateTime) < 14 * 24 * time.Hour{
 			log.Println("read csv from cache:",pageUrl)
 			CsvResult.Instance.WriteResult(&tmpScraperData)
 			return
